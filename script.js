@@ -14,7 +14,7 @@ const Today =new Date().toISOString().split('T')[0];
 
 let countdownTitle = '';
 let countdownDate = '';
-let countdownValue= Date;
+let countdownValue= new Date();
 let countdownActive;
 let savedCountdown;
 
@@ -94,10 +94,23 @@ function reset(){
     // Reset values
     countdownTitle='';
     countdownDate='';
+    localStorage.removeItem('countdown');
 }
 
-
+function restorePreviousCountdown(){
+    // Get countdown from localStorage if available
+    if(localStorage.getItem('countdown')){
+        inputContainer.hidden=true;
+        savedCountdown = JSON.parse(localStorage.getItem('countdown'));
+        countdownTitle = savedCountdown.title;
+        countdownDate = savedCountdown.date;
+        countdownValue = new Date(countdownDate).getTime();
+        updateDom();
+    }
+}
 
 countdownForm.addEventListener('submit', updateCountdown);
 countdownElBtn.addEventListener('click', reset);
 completeBtn.addEventListener('click', reset);
+
+restorePreviousCountdown();
